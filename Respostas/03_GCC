@@ -1,0 +1,293 @@
+Para todas as questões, compile-as com o gcc e execute-as via terminal.
+
+1.Crie um "Olá mundo!" em C.
+
+//echo "Ola mundo!"
+
+2.Crie um código em C que pergunta ao usuário o seu nome, e imprime no terminal "Ola " e o nome do usuário. Por exemplo, considerando que o código criado recebeu o nome de 'ola_usuario_1':
+
+$ ./ola_usuario_1
+$ Digite o seu nome: Eu
+$ Ola Eu
+
+          //touch ola_usuario_1
+          //arquivo ola_usuario_1.c
+          #include <stdio.h>
+
+          int main(void)
+          {
+            char nome[30];
+
+            printf("Qual o seu nome\n");
+            scanf("%s", &nome);
+            printf("Ola %s.\n", nome);
+
+            return 0;
+          }
+
+3.Apresente os comportamentos do código anterior nos seguintes casos:
+(a) Se o usuário insere mais de um nome.
+
+$ ./ola_usuario_1
+$ Digite o seu nome: Eu Mesmo
+
+          //./ola_usuario_1
+          //Qual o seu nome:
+          //Rafael Alves
+          //Ola Rafael.
+
+(b) Se o usuário insere mais de um nome entre aspas duplas. Por exemplo:
+
+$ ./ola_usuario_1
+$ Digite o seu nome: "Eu Mesmo"
+
+          //./ola_usuario_1
+          //Qual o seu nome:
+          //"Rafael Alves"
+          //Ola "Rafael.
+
+(c) Se é usado um pipe. Por exemplo:
+
+$ echo Eu | ./ola_usuario_1
+
+          //echo Rafael | ./ola_usuario_1
+          //Qual o seu nome:
+          //Ola Rafael
+
+(d) Se é usado um pipe com mais de um nome. Por exemplo:
+
+$ echo Eu Mesmo | ./ola_usuario_1
+
+          //echo Rafael Alves | ./ola_usuario_1
+          //Qual o seu nome:
+          //Ola Rafael.
+          
+(e) Se é usado um pipe com mais de um nome entre aspas duplas. Por exemplo:
+
+$ echo "Eu Mesmo" | ./ola_usuario_1
+
+          //echo "Rafael Alves" | ./ola_usuario_1
+          //Qual o seu nome:
+          //Ola "Rafael.
+
+(f) Se é usado o redirecionamento de arquivo. Por exemplo:
+
+$ echo Ola mundo cruel! > ola.txt
+$ ./ola_usuario_1 < ola.txt
+
+          //echo Ola mundo cruel! > ola.txt
+          //./ola_usuario_1 < ola.txt
+          //Qual o seu nome:
+          //Ola Ola.
+
+4.Crie um código em C que recebe o nome do usuário como um argumento de entrada (usando as variáveis argc e *argv[]), e imprime no terminal "Ola " e o nome do usuário. Por exemplo, considerando que o código criado recebeu o nome de 'ola_usuario_2':
+
+$ ./ola_usuario_2 Eu
+$ Ola Eu
+
+          //touch ola_usuario_2
+          
+             #include <stdio.h>
+             
+             int main(int argc, char* argv[])
+             {
+                  int i;
+                  printf("Ola");
+                  for(i=1; i<argc; i++)
+                  {
+                      printf(" %s", argv[i]);
+                  }
+             return 0;
+             }
+
+5.Apresente os comportamentos do código anterior nos seguintes casos:
+(a) Se o usuário insere mais de um nome.
+
+$ ./ola_usuario_2 Eu Mesmo
+
+            //./ola_usuario_2 Rafael Alves
+            //Ola Rafael Alves
+            
+(b) Se o usuário insere mais de um nome entre aspas duplas. Por exemplo:
+
+$ ./ola_usuario_2 "Eu Mesmo"
+
+            //./ola_usuario_2 "Rafael Alves"
+            //Ola Rafael Alves
+
+(c) Se é usado um pipe. Por exemplo:
+
+$ echo Eu | ./ola_usuario_2
+
+            //./ola_usuario_2 echo Rafael | ./ola_usuario_2
+            //Ola Rafael
+            
+(d) Se é usado um pipe com mais de um nome. Por exemplo:
+
+$ echo Eu Mesmo | ./ola_usuario_2
+
+            //./ola_usuario_2 echo Rafael Alves | ./ola_usuario_2
+            //Ola Rafael Alves
+            
+(e) Se é usado um pipe com mais de um nome entre aspas duplas. Por exemplo:
+
+$ echo Eu Mesmo | ./ola_usuario_2
+
+            //./ola_usuario_2 echo "Rafael Alves" | ./ola_usuario_2
+            //Ola Rafael Alves
+            
+(f) Se é usado o redirecionamento de arquivo. Por exemplo:
+
+$ echo Ola mundo cruel! > ola.txt
+$ ./ola_usuario_2 < ola.txt
+
+            //echo Ola mundo cruel! > ola.txt
+            //./ola_usuario_2 < ola.txt
+            //Ola Ola mundo cruel!
+            
+6.Crie um código em C que faz o mesmo que o código da questão 4, e em seguida imprime no terminal quantos valores de entrada foram fornecidos pelo usuário. Por exemplo, considerando que o código criado recebeu o nome de 'ola_usuario_3':
+$ ./ola_usuario_3 Eu
+$ Ola Eu
+$ Numero de entradas = 2
+
+            //touch ola_usuario_3
+            
+                #include <stdio.h>
+
+                int main(int argc, char* argv[])
+                {
+                    int i;
+                    printf("Ola");
+                    for(i = 1; i < argc; i++)
+                    {
+                        printf(" %s", argv[i]);
+                    } 
+                      printf("\nNumero de argumentos: %d", (i-1));
+                return 0;   
+                } 
+
+            //./ola_usuario_3 Rafael Alves
+            //Ola Rafael Alves
+            //Numero de argumentos: 2
+
+7.Crie um código em C que imprime todos os argumentos de entrada fornecidos pelo usuário. Por exemplo, considerando que o código criado recebeu o nome de 'ola_argumentos':
+$ ./ola_argumentos Eu Mesmo e Minha Pessoa
+$ Argumentos: Eu Mesmo e Minha Pessoa
+
+            //touch ola_argumentos
+            
+                #include <stdio.h>
+
+                int main(int argc, char* argv[])
+                {
+                    int i;
+                    for(i = 0; i < argc; i++)
+                    {
+                        printf(" %s", argv[i]);
+                    } 
+                      printf("\nNumero de argumentos: %d", (i-1));
+                return 0;   
+                }
+
+            //./ola_argumentos Rafael Alves Magalhaes
+            //Ola Rafael Alves Magalhaes
+            //Numero de argumentos: 3
+
+8.Crie uma função que retorna a quantidade de caracteres em uma string, usando o seguinte protótipo: int Num_Caracs(char *string); 
+Salve-a em um arquivo separado chamado 'num_caracs.c'. 
+Salve o protótipo em um arquivo chamado 'num_caracs.h'.
+Compile 'num_caracs.c' para gerar o objeto 'num_caracs.o'.
+
+            //touch num_caracs_1
+                int Num_caracs(char *string)
+                {
+                    int i;    
+                    for(i = 0;string[i]; ++i)
+                  {
+                   }
+                  printf("Numero de caracteres %d", (i));   	
+                return 0;   
+                }
+
+9.Re-utilize o objeto criado na questão 8 para criar um código que imprime cada argumento de entrada e a quantidade de caracteres de cada um desses argumentos. Por exemplo, considerando que o código criado recebeu o nome de 'ola_num_caracs_1':
+
+$ ./ola_num_caracs_1 Eu Mesmo
+$ Argumento: ./ola_num_caracs_1 / Numero de caracteres: 18
+$ Argumento: Eu / Numero de caracteres: 2
+$ Argumento: Mesmo / Numero de caracteres: 5
+
+            //touch ola_argumentos
+                #include <stdio.h>
+                #include "num_caracs.h"
+
+                int main(int argc, char* argv[])
+                {
+                    int i;
+                    for(i = 0; i < argc; i++)
+                    {
+                      printf("\nArgumento: %s / ", argv[i]);
+                      Num_caracs(argv[i]);
+                  }    
+                }
+
+            //./ola_num_caracs_1 rafael alves
+            //Argumento: ./ola_num_caracs_1 / Numero de caracteres: 11
+            //Argumento: rafael / Numero de caracteres: 6
+            //Argumento: alves / Numero de caracteres: 5
+
+10.Crie um Makefile para a questão anterior.
+
+            num_caracs: ola_num_caracs_1.o num_caracs.o
+                    gcc $(CFLAGS) -o num_caracs ola_num_caracs_1.o num_caracs.o
+            ola_num_caracs_1.o: ola_num_caracs_1.c num_caracs.h
+                    gcc $(CFLAGS) -c ola_num_caracs_1.c
+            num_caracs.o: num_caracs.c num_caracs.h
+                    gcc $(CFLAGS) -c num_caracs.c
+            clean:
+                    rm -f *.o num_caracs
+
+11.Re-utilize o objeto criado na questão 8 para criar um código que imprime o total de caracteres nos argumentos de entrada. Por exemplo, considerando que o código criado recebeu o nome de 'ola_num_caracs_2':
+
+$ ./ola_num_caracs_2 Eu Mesmo
+$ Total de caracteres de entrada: 25
+
+            //arquivo ola_argumentos
+            
+                #include <stdio.h>
+                #include "num_caracs_2.h"
+
+                int main(int argc, char* argv[])
+                {
+                    int i, num = 0 ;
+                    for(i = 0; i < argc; i++)
+                    {	num = num + num_caracs_2(argv[i]);
+
+                  }
+                    printf("\n Total de caracteres: %d", num);	
+
+                }
+
+
+            //arquivo num_caracteres
+
+                int num_caracs_2(char *string)
+                {
+                    int i=0;
+
+                    for(i = 0;string[i]; ++i)
+                  {
+                   }
+                  printf("\nNumero de caracteres %d", (i));   	
+                  return i;   
+                }	
+            
+12.Crie um Makefile para a questão anterior.
+
+            num_caracs_2: ola_num_caracs_2.o num_caracs_2.o
+                    gcc $(CFLAGS) -o num_caracs_2 ola_num_caracs_2.o num_caracs_2.o
+            ola_num_caracs_2.o: ola_num_caracs_2.c num_caracs_2.h
+                    gcc $(CFLAGS) -c ola_num_caracs_2.c
+            num_caracs_2.o: num_caracs_2.c num_caracs_2.h
+                    gcc $(CFLAGS) -c num_caracs_2.c
+            clean:
+                    rm -f *.o num_caracs_2
