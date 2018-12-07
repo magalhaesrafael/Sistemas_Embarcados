@@ -1,0 +1,98 @@
+1. Quais são as vantagens e desvantagens em utilizar:
+	(a) fork?
+	(b) threads?
+Diferente do que ocorre quando se cria um novo processo com a função fork (vide
+capítulo referente a processos), durante a criação de uma nova thread, nada é
+copiado. Ou seja, as threads existente a criada dividem o mesmo espaço de memória,
+descrição de arquivos e outros resquícios do sistema, do mesmo modo que a thread
+original. Logo, se em uma dada instância alguma thread muda o valor de alguma
+variável, a thread subseqüente utilizará a variável modificada. Assim como se uma
+thread fecha um arquivo, outras threads não poderão ler ou escrever nele. Entretanto,
+podem-se tirar algumas vantagens desta característica da thread, pois não são
+necessários mecanismos de comunicação e sincronização complexas.
+
+2. Quantas threads serão criadas após as linhas de código a seguir? Quantas coexistirão? Por quê?
+(a)
+		void* funcao_thread_1(void *arg);
+		void* funcao_thread_2(void *arg);
+		
+		int main (int argc, char** argv)
+		{
+			pthread_t t1, t2;
+			pthread_create(&t1, NULL, funcao_thread_1, NULL);
+			pthread_create(&t2, NULL, funcao_thread_2, NULL);
+			pthread_join(t1, NULL);
+			pthread_join(t2, NULL);
+			return 0;
+		}
+Serão criadas as duas t1 e t2 e as duas coexistirao, porem a t2 so terminarar enquando a t1 for concluida, devido a funcao join.
+
+(b)
+		void* funcao_thread_1(void *arg);
+		void* funcao_thread_2(void *arg);
+		
+		int main (int argc, char** argv)
+		{
+			pthread_t t1, t2;
+			pthread_create(&t1, NULL, funcao_thread_1, NULL);
+			pthread_join(t1, NULL);
+			pthread_create(&t2, NULL, funcao_thread_2, NULL);
+			pthread_join(t2, NULL);
+			return 0;
+		}
+Serão criadas as duas t1 e t2, porem a t2 so será criada quando t1 for concluida, devido a funcao join.
+
+3. Apresente as características e utilidades das seguintes funções:
+	(a) pthread_setcancelstate()
+	(b) pthread_setcanceltype()
+
+PTHREAD_SETCANCELSTATE (3) Manual do programador LinuxPTHREAD_SETCANCELSTATE (3)
+NAME         top
+
+       Pthread_setcancelstate, pthread_setcanceltype - cancelabilidade do conjunto
+       Estado e tipo
+SINOPSE         top
+
+       #include <pthread.h>
+
+       Int pthread_setcancelstate (int estado , int * oldstate ); 
+       Int pthread_setcanceltype ( tipo int, int * oldtype );
+
+       Compile e ligue com -pthread .
+DESCRIÇÃO         topo
+
+       O pthread_setcancelstate () define o estado de cancelabilidade do
+       Chamando thread para o valor dado no estado . O anterior
+       O estado de cancelabilidade do thread é retornado no buffer apontado
+       Por por oldstate . O argumento do estado deve ter um dos seguintes
+       Valores:
+
+       PTHREAD_CANCEL_ENABLE
+              O thread é cancelável. Esta é a cancelabilidade padrão
+              Estado em todos os novos threads, incluindo o thread inicial. o
+              O tipo de cancelabilidade do thread determina quando um cancelable
+              Thread responderá a um pedido de cancelamento.
+
+       PTHREAD_CANCEL_DISABLE
+              O thread não é cancelável. Se um pedido de cancelamento for
+              Recebido, ele é bloqueado até cancelability é habilitado.
+
+       O pthread_setcanceltype () define o tipo de cancelabilidade do
+       Chamando thread para o valor dado no tipo . O anterior
+       O tipo de cancelabilidade do thread é retornado no buffer apontado para
+       Por oldtype . O argumento de tipo deve ter um dos seguintes valores:
+
+       PTHREAD_CANCEL_DEFERRED
+              Um pedido de cancelamento é adiado até o próximo
+              Uma função que é um ponto de cancelamento (veja pthreads (7) ).
+              Este é o tipo de cancelabilidade padrão em todos os novos segmentos,
+              Incluindo o thread inicial.
+
+       PTHREAD_CANCEL_ASYNCHRONOUS
+              O thread pode ser cancelado a qualquer momento. (Normalmente,
+              Ser cancelado imediatamente após a recepção de um pedido de cancelamento,
+              Mas o sistema não garante isso.)
+
+       A operação set-and-get realizada por cada uma dessas funções é
+       Atômica em relação a outros threads no processo chamando o mesmo
+       função.

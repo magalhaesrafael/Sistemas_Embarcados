@@ -1,0 +1,114 @@
+1. Considerando a biblioteca-padrão da linguagem C, responda:
+
+(a) Quais são as funções (e seus protótipos) para abrir e fechar arquivos?
+
+- fopen()
+protótipo: FILE *fopen (char *nome_do_arquivo,char *modo);
+
+modos de abertura:
+"r"(abre um arquivo texto para leitura e o arquivo deve existir antes de ser
+aberto);
+"w" (abre um arquivo texto para gravação. Se o arquivo não existir, ele será
+criado. Se já existir, o conteúdo anterior será destruído);
+"a" (abre um arquivo texto para gravação. Os dados serão adicionados no fim
+do arquivo ("append"), se ele já existir, ou um novo arquivo será criado,
+no caso de arquivo não existente anteriormente);
+"rb" (abre um arquivo binário para leitura. Igual ao modo "r" anterior, só que o
+arquivo é binário);
+"wb" (cria um arquivo binário para escrita, como no modo "w" anterior, só que o
+arquivo é binário);
+"ab" (acrescenta dados binários no fim do arquivo, como no modo "a" anterior,
+só que o arquivo é binário);
+"r+" (abre um arquivo texto para leitura e gravação. O arquivo deve existir e
+pode ser modificado);
+"w+" (cria um arquivo texto para leitura e gravação. Se o arquivo existir, o
+conteúdo anterior será destruído. Se não existir, será criado);
+"a+" (abre um arquivo texto para gravação e leitura. Os dados serão
+adicionados no fim do arquivo se ele já existir, ou um novo arquivo será
+criado, no caso de arquivo não existente anteriormente);
+"r+b" (abre um arquivo binário para leitura e escrita. O mesmo que "r+" acima,
+só que o arquivo é binário);
+"w+b" (cria um arquivo binário para leitura e escrita. O mesmo que "w+" acima,
+só que o arquivo é binário);
+"a+b" (acrescenta dados ou cria uma arquivo binário para leitura e escrita. O
+mesmo que "a+" acima, só que o arquivo é binário);
+
+-exit()
+Protótipo: void exit (int codigo_de_retorno);
+Para utilizá-la deve-se a biblioteca stdlib.h. 
+Estafunção aborta a execução do programa. Pode ser chamada de qualquer ponto no
+programa 
+
+fclose()
+Quando termina-se de usar um arquivo que aberto, deve-se fechá-lo. 
+Protótipo: int fclose (FILE *fp);
+O ponteiro fp passado à função fclose() determina o arquivo a ser fechado. A função
+retorna zero no caso de sucesso.
+A função exit() fecha todos os arquivos que um programa tiver aberto.
+
+
+(b) Quais são as funções (e seus protótipos) para escrever em arquivos?
+
+putc()
+Protótipo: int putc (int ch,FILE *fp);
+
+fwrite()
+Protótipo : unsigned fwrite(void *buffer,int numero_de_bytes,int count,FILE *fp);
+A função retorna o número de itens escritos. Este valor será igual a count a menos que
+ocorra algum erro.
+
+(c) Quais são as funções (e seus protótipos) para ler arquivos?
+
+fgets()
+Protótipo: char *fgets (char *str, int tamanho,FILE *fp);
+		fgets (str, tamanho, stdin);
+fread()
+Protótipo : unsigned fread (void *buffer, int numero_de_bytes, int count, FILE*fp);
+
+(d) Quais são as funções (e seus protótipos) para reposicionar um ponteiro para arquivo?
+
+(e) Quais bibliotecas devem ser incluídas no código para poder utilizar as funções acima?
+
+<stdio.h>: Tratamento de entrada/saída.
+<stdlib.h>: Implementa funções para diversas operações, incluindo conversão,  alocação de memória, controle de processo, funções de busca e ordenação
+
+2. O que é a norma POSIX?
+
+É uma família de normas definidas pelo IEEE designadas por
+IEEE1003;
+O objetivo é garantir a portabilidade do código fonte de um
+programa entre sistemas operativos distintos que obdeçam
+às regras da norma POSIX;
+Estas regras atuam como interface entre sistemas
+operativos distintos;
+A Norma POSIX especifica os interfaces do utilizador e do
+software ao sistema operativo;
+
+3. Considerando a norma POSIX, responda:
+(a) Quais são as funções (e seus protótipos) para abrir e fechar arquivos?
+
+open: abrir e opcionalmente criar um arquivo pra leitura/escrita.
+protótipo: int open(const char* path, int oflag,... )
+
+(b) Quais são as funções (e seus protótipos) para escrever em arquivos?
+
+Posix write 
+protótipo; ssize_t write (int fildes, const void * buf , size_t nbyte );
+
+(c) Quais são as funções (e seus protótipos) para ler arquivos?
+
+Posix read
+protótipo: size_t read (int fildes, void *buf, size_t nbyte);
+
+(d) Quais são as funções (e seus protótipos) para reposicionar um ponteiro para arquivo?
+
+Posix Lseek: reposiciona o ponteiro do descritor do arquivo em um arquivo aberto
+off_t lseek (int fd, off_t, int whence );
+
+(e) Quais bibliotecas devem ser incluídas no código para poder utilizar as funções acima?
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>

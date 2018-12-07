@@ -1,0 +1,190 @@
+1. Como se utiliza o comando 'ps' para:
+(a) Mostrar todos os processos rodando na máquina?
+
+ps -a : mostra os processos de todos os usuários.
+ps -e : mostra as variáveis de ambiente no momento da inicialização do processo.
+
+(b) Mostrar os processos de um usuário?
+
+ps -user root
+-u : fornece o nome do usuário e a hora de início do processo.
+
+(c) Ordenar todos os processos de acordo com o uso da CPU?
+
+ps -
+(d) Mostrar a quanto tempo cada processo está rodando?
+ps -ef
+
+2. De onde vem o nome fork()?
+
+O fork(do inglês, significa bifurcação) é uma função que é uma chamada de sistema. Ou seja, ela invoca o sistema operacional para fazer alguma tarefa que o usuário não pode.
+No caso, o fork é usado para criar um novo processo em sistemas do tipo Unix, e isso só pode ser feito via fork.
+
+Quando criamos um processo por meio do fork, dizemos que esse novo processo é o filho, e processo pai é aquele que usou o fork.
+
+Por exemplo, suponha que você programou um software em C, e nele usou a chamada fork().
+Esse programa em C, executando, é o processo pai.
+
+Quando usamos o fork, será criado o processo filho, que será idêntico ao pai, inclusive tendo as mesmas variáveis, registros, descritores de arquivos etc.
+Ou seja, o processo filho é uma cópia do pai, exatamente igual.
+
+Porém, é uma cópia, e como tal, depois de criado o processo filho, ele vai ser executado e o que acontece em um processo não ocorre no outro, são processos distintos agora, cada um seguindo seu rumo, onde é possível mudar o valor de uma variável em um e isso não irá alterar o valor desta variável no outro processo, por exemplo.
+
+3. Quais são as vantagens e desvantagens em utilizar:
+(a) system()?
+
+A função system oriunda da biblioteca padrão do C (stdlib.h) permite, de maneira
+muito simples executar um comando dentro do programa em execução. A partir dele,
+o sistema cria um sub-processo onde o comando é executado em um shell padrão.
+
+#include <stdlib.h>
+int main ()
+{
+int retorna_valor;
+retorna_valor = system (“ls -l /”);
+return retorna_valor;
+}
+
+A função system retorna em sua saída o status do comando no shell. Se o shell não
+puder ser executado, o system() retorna o valor 127; se um outro erro ocorre, a
+função retorna -1.
+Como a função system utiliza o shell para invocar um comando, ela fica sujeita às
+características, limitações e falhas de segurança inerentes do shell do sistema. Além
+disso, não se pode garantir que uma versão particular do shell Bourne (por exemplo)
+esteja disponível. Ou até mesmo, restrições devido aos privilégios do usuário podem
+inviabilizar o sistema em questão.
+
+(b) fork() e exec()?
+
+Quando um programa chama o fork(), uma duplicação de processos, denominada
+processo filho (child process) é criada. O processo pai continua a executar
+normalmente o programa de onde o fork() foi chamado. Assim como o processo
+filho também continua a execução desde o fork().
+Então como é feita a distinção entre estes dois processos? Primeiro, o processo filho é
+um novo processo e isso implica em um novo PID – diferente de seu pai. Uma maneira
+de distinguir o filho do pai em um programa é simplesmente fazer uma chamada com
+a função getpid(). Entretanto, a função fork() retorna valores distintos. O valor de
+retorno no processo pai é o PID do processo filho, ou seja, retorna um novo PID. Já o
+valor do retorno do filho é zero.
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+int main ()
+{
+pid_t child_pid;
+printf (“the main program process ID is %d\n”, (int) getpid ());
+child_pid = fork ();
+if (child_pid != 0) {
+printf (“this is the parent process, with id %d\n”, (int) getpid
+());
+printf (“the child’s process ID is %d\n”, (int) child_pid);
+}
+else
+printf (“this is the child process, with id %d\n”, (int) getpid
+());
+return 0;
+}
+
+
+exec()
+
+
+A função exec substitui o programa em execução de um processo por outro
+programa. Quando um programa chama a função exec, o processo cessa
+imediatamente a execução do programa corrente e passa a executar um novo
+programa do início, isso se assumir que a chamada não possua ou encontre nenhum
+erro.
+A família exec são funções que variam sutilmente na sua funcionalidade e também na
+maneira em que são chamados.
+? Funções que contém a letra 'p' em seus nomes (execvp e execlp) aceitam que
+o nome ou procura do programa esteja no current path; funções que não
+possuem o 'p' devem conter o caminho completo do programa a ser executado.
+? Funções que contém a letra 'v' em seus nomes (execv, execvp e execve)
+aceitam que a lista de arqumentos do novo programa sejam nulos. Funções que
+contém a letra 'l' aceitam em sua lista de argumentos a utilização de
+mecanismos varargs em linguagem C.
+? Funções que contém a letra 'e' em seus nomes (exece e execle) aceitam um
+argumento adicional.
+Como a função exec substitui o programa em execução por um outro, ele não retorna
+valor algum, exceto quando um erro ocorre.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+/* Spawn a child process running a new program. PROGRAM is the name
+of the program to run; the path will be searched for this program.
+ARG_LIST is a NULL-terminated list of character strings to be
+passed as the program’s argument list. Returns the process ID of
+the spawned process. */
+int spawn (char* program, char** arg_list)
+{
+pid_t child_pid;
+/* Duplicate this process. */
+child_pid = fork ();
+if (child_pid != 0)
+/* This is the parent process. */
+return child_pid;
+else {
+/* Now execute PROGRAM, searching for it in the path. */
+execvp (program, arg_list);
+/* The execvp function returns only if an error occurs. */
+fprintf (stderr, “an error occurred in execvp\n”);
+abort ();
+}
+}
+int main ()
+{
+/* The argument list to pass to the “ls” command. */
+char* arg_list[] = {
+“ls”, /* argv[0], the name of the program. */
+“-l”,
+“/”,
+NULL /* The argument list must end with a NULL. */
+};
+/* Spawn a child process running the “ls” command. Ignore the
+returned child process ID. */
+spawn (“ls”, arg_list);
+printf (“done with main program\n”);
+return 0;
+}
+
+
+4. É possível utilizar o exec() sem executar o fork() antes?
+ 
+Não, pois mata o proprio processo.
+
+5. Quais são as características básicas das seguintes funções:
+	(a) execp()?
+
+
+	(b) execv()?
+
+Funções que contém a letra 'v' em seus nomes (execv, execvp e execve)
+aceitam que a lista de arqumentos do novo programa sejam nulos. Funções que
+contém a letra 'l' aceitam em sua lista de argumentos a utilização de
+mecanismos varargs em linguagem C.
+
+	(c) exece()?
+
+Funções que contém a letra 'e' em seus nomes (exece e execle) aceitam um
+argumento adicional.
+
+	(d) execvp()?
+
+Funções que contém a letra 'p' em seus nomes (execvp e execlp) aceitam que
+o nome ou procura do programa esteja no current path; funções que não
+possuem o 'p' devem conter o caminho completo do programa a ser executado.
+
+	(e) execve()?
+
+Funções que contém a letra 'v' em seus nomes (execv, execvp e execve)
+aceitam que a lista de arqumentos do novo programa sejam nulos. Funções que
+contém a letra 'l' aceitam em sua lista de argumentos a utilização de
+mecanismos varargs em linguagem C.
+
+	(f) execle()?
+
+Funções que contém a letra 'e' em seus nomes (exece e execle) aceitam um
+argumento adicional.

@@ -1,0 +1,69 @@
+1. Com relação ao modelo cliente-servidor, responda:
+(a) Quais são as características básicas deste modelo?
+
+A característica do modelo cliente-servidor, descreve a relação de programas 
+numa aplicação. O componente de servidor fornece uma função ou serviço a um ou mais clientes, que iniciam os pedidos de serviço.
+Funcionalidades como a troca de e-mail, acesso à internet ou acesso 
+a um banco de dados, são construídos com base no modelo cliente-servidor.
+ Por exemplo, um navegador web é um programa cliente, em execução no computador
+ do usuário, que acede às informações armazenadas
+num servidor web na internet. Usuários de serviços bancários, acedendo do seu 
+computador, usam um cliente web para enviar uma solicitação para um servidor web num banco. Esse programa pode, por sua vez, encaminhar
+ o pedido para o seu próprio programa de banco de dados do cliente que envia uma solicitação para um servidor de banco de dados noutro computador do banco para recuperar as informações da conta. O saldo é devolvido ao cliente de banco de dados do banco, que por sua vez, serve de volta ao cliente navegador exibindo os resultados para o usuário.
+O modelo cliente-servidor, tornou-se uma das ideias centrais de computação de 
+rede. Muitos aplicativos de negócios, escritos hoje, utilizam o modelo cliente-servidor. O termo também tem sido utilizado para distinguir a computação distribuída por computadores dispersos da "computação" monolítica centralizada em mainframe.
+Cada instância de software do cliente pode enviar requisições a vários servidores. Por sua vez, os servidores podem aceitar esses pedidos, processá-los e retornar as informações solicitadas para o cliente. Embora este conceito possa ser aplicado por uma variedade de razões e para diversos tipos de aplicações, a arquitetura permanece fundamentalmente a mesma.
+
+(b) Quais são as características básicas do servidor?
+
+Sempre espera por um pedido de um cliente;
+Atende os pedidos e, em seguida, responde aos clientes com os dados solicitados;
+Pode se comunicar com outros servidores para atender uma solicitação específica do cliente;
+Fornece recursos de rede.
+Normalmente interage diretamente com os usuários finais através de qualquer interface com o usuário;
+Estrutura o sistema.
+
+(c) Quais são as características básicas do cliente?
+
+Inicia pedidos para servidores;
+Espera por respostas;
+Recebe respostas;
+Conecta-se a um pequeno número de servidores de uma só vez ;
+Normalmente interage diretamente com os servidores através de seu software aplicação especifico, que lhe possibilita a comunicação com o servidor;
+Utiliza recursos da rede.
+
+2.  Com relação ao protocolo de comunicação da internet, responda:
+(a) O que são protocolos de comunicação?
+
+Na ciência da computação, um protocolo é uma convenção que 
+controla e possibilita uma conexão, comunicação, transferência de 
+dados entre dois sistemas computacionais. De maneira simples, um protocolo 
+pode ser definido como "as regras que governam" a sintaxe, semântica e 
+sincronização da comunicação
+
+(b) Quais são as características básicas de protocolos de comunicação?
+
+detecção da conexão física subjacente ou a existência de um nó;
+handshaking (estabelecimento de ligação);
+negociação de várias características de uma conexão;
+como iniciar e finalizar uma mensagem;
+como formatar uma mensagem;
+o que fazer com mensagens corrompidas ou mal formatadas;
+como detectar perda inesperada de conexão e o que fazer em seguida;
+término de sessão ou conexão
+
+3. Com relação ao protocolo TCP, responda:
+(a) O que são portas no protocolo TCP?
+
+Porta é um ponto físico (hardware) ou lógico (software), 
+no qual podem ser feitas conexões, ou seja, um canal através do qual 
+os dados são transferidos entre um dispositivo de entrada e o processador 
+ou entre o processador e um dispositivo de saída. Ou acesso por dentro e 
+por fora do computador.
+
+(b) Para que servem estas portas?
+
+Uma porta de software é uma conexão virtual que pode ser 
+usada na transmissão de dados. As mais comuns são as portas 
+protocoladas TCP e UDP, que são usadas para conexão entre os 
+computadores e a Internet. 

@@ -1,0 +1,210 @@
+1. Crie um programa em C que cria um processo-filho e um pipe de comunicação. 
+Faça com que o processo-pai envie os valores 1, 2, 3, 4, 5, 6, 7, 8, 9 e 10 para o processo-filho, com intervalos de 1 segundo entre cada envio.
+Depois de o processo-pai enviar o número 10, ele aguarda 1 segundo e termina a execução. 
+O processo-filho escreve na tela cada valor recebido, e quando ele receber o valor 10, ele termina a execução.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#define BUFFER 256
+int i = 0;
+
+int main(void)
+
+{
+	int fd[2]; //criando File Descriptors pro pipe
+	pid_t pid; // varaiável para armazenar o pid
+
+	//Criando o pipe
+	if(pipe(fd) < 0)
+	{
+		perror("pipe");
+		return -1;
+	}
+
+	//criando processo filho
+	if((pid = fork()) < 0)
+	{
+		perror("fork");
+		exit(1);
+	}
+
+	// Processo Pai
+	if(pid > 0)
+	{
+		// No processo pai vamos escrever, então fechamos o pipe para leitura //
+		close(fd[0]);
+
+		char str[BUFFER] = "12345678910";
+		printf("String enviada pelo pai no pipe: %s \n",str );
+
+		// Escrevendo no pipe 
+		for(i = 0 ;  i < sizeof(str); i++)
+		{
+			write(fd[1], str+i, 1);
+			sleep(1);
+		}
+		
+		exit(0);
+	}
+
+	else
+	{
+		char str_recebida[BUFFER];
+
+		// No filho vamos ler, então fechamos o pipe para escrita
+		close(fd[1]);
+
+		// Lendo o que foi escrito no pipe
+
+		for(i = 0 ;  i < 10; i++)
+		{
+		read(fd[0], str_recebida, 1);
+		sleep(1);
+		printf("String lida pelo filho no pipe: %s\n\n",str_recebida );
+		}
+		
+		exit(0);
+
+	}
+
+	return 0;
+
+	}
+
+2. Crie um programa em C que cria um processo-filho e um pipe de comunicação. 
+Utilize o pipe para executar a seguinte conversa entre processos:
+
+	FILHO: Pai, qual é a verdadeira essência da sabedoria?
+	PAI: Não façais nada violento, praticai somente aquilo que é justo e equilibrado.
+	FILHO: Mas até uma criança de três anos sabe disso!
+	PAI: Sim, mas é uma coisa difícil de ser praticada até mesmo por um velho como eu...
+
+Neste exercício, quem recebe a mensagem via pipe é quem as escreve no terminal.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#define BUFFER 256
+int i = 0;
+
+int main(void)
+
+{
+	int pip1[2],pip2[2],pip3[2],pip4[2]; //criando File Descriptors pro pipe
+	pid_t pid; // varaiável para armazenar o pid
+
+	//Criando o pipe
+	if(pipe(pip1) < 0)
+	{
+		perror("pipe");
+		return -1;
+	}
+	if(pipe(pip2) < 0)
+	{
+		perror("pipe");
+		return -1;
+	}
+	if(pipe(pip3) < 0)
+	{
+		perror("pipe");
+		return -1;
+	}
+	if(pipe(pip4) < 0)
+	{
+		perror("pipe");
+		return -1;
+	}
+
+	//criando processo filho
+	if((pid = fork()) < 0)
+	{
+		perror("fork");
+		exit(1);
+	}
+
+	// Processo Pai 
+	if(pid > 0)
+	{
+		// No processo pai vamos escrever, então fechamos o pipe para leitura 
+		
+
+		char str1_enviada_pai[BUFFER] = "Não façais nada violento, praticai somente aquilo que é justo e equilibrado.";
+		char str2_enviada_pai[BUFFER] = "Sim, mas é uma coisa difícil de ser praticada até mesmo por um velho como eu...";
+		char str_buffer_pai[BUFFER];
+		
+			close(pip1[1]);// fechando para escrita 
+			//lendo o pipe
+			read(pip1[0], str_buffer_pai, sizeof(str_buffer_pai));
+			sleep(1);
+			printf("FILHO: %s\n",str_buffer_pai);
+
+			close(pip2[0]);//fechando para leitura
+			write(pip2[1], str1_enviada_pai, sizeof(str1_enviada_pai)+1);
+			sleep(2);
+
+			close(pip3[1]);
+			read(pip3[0],str_buffer_pai,sizeof(str_buffer_pai));
+			sleep(1);
+			printf("FILHO: %s\n",str_buffer_pai);
+
+			close(pip4[0]);
+			write(pip4[1], str2_enviada_pai,sizeof(str2_enviada_pai) + 1);
+			sleep(1);
+		
+		
+		exit(0);
+	}
+
+	else
+	{
+		char str1_enviada_filho[BUFFER]= "Pai, qual é a verdadeira essência da sabedoria?";
+		char str2_enviada_filho[BUFFER] = "Mas até uma criança de três anos sabe disso!";
+		char str_buffer_filho[BUFFER];
+
+		// Para esse exemplo o filho vai escrever e ler//
+		// Para escrever fechamos o pipe para leitura //
+
+		close(pip1[0]);//fechando para leitura
+		write(pip1[1], str1_enviada_filho, sizeof(str1_enviada_filho)+1);
+		sleep(1);
+		
+		close(pip2[1]); //fechando para escrita
+		read(pip2[0],str_buffer_filho,sizeof(str_buffer_filho));
+		sleep(1);
+		printf("PAI: %s\n",str_buffer_filho);
+
+		close(pip3[0]);
+		write(pip3[1],str2_enviada_filho,sizeof(str2_enviada_filho) +1);
+		sleep(1);
+		
+		close(pip4[1]);
+		read(pip4[0],str_buffer_filho,sizeof(str_buffer_filho));
+		sleep(1);
+		printf("PAI: %s\n",str_buffer_filho);
+		sleep(1);
+	
+		
+		exit(0);
+
+	}
+
+	return 0;
+
+	}
+
+3. Crie um programa em C que cria dois processos-filhos e um pipe de comunicação. Utilize o pipe para executar a seguinte conversa entre processos:
+
+	FILHO1: Quando o vento passa, é a bandeira que se move.
+	FILHO2: Não, é o vento que se move.
+	PAI: Os dois se enganam. É a mente dos senhores que se move.
+
+Neste exercício, quem recebe a mensagem via pipe é quem as escreve no terminal.
+
+4. Crie um programa em C que cria um processo-filho e um pipe de comunicação. O processo-filho deverá pedir o nome do usuário, envia-lo para o pai via pipe, e o pai deverá escrever o nome do usuário no terminal.
+
+5. Utilize o sinal de alarme para chamar a cada segundo o comando 'ps' ordenando todos os processos de acordo com o uso da CPU. Ou seja, seu código atualizará a lista de processos a cada segundo. Além disso, o código deverá tratar o sinal do CTRL-C, escrevendo "Processo terminado!" na tela antes de terminar a execução do processo.
